@@ -13,7 +13,7 @@ import java.math.*;
 public class Main extends Application {
 	// globals
 	private final boolean showingAllSolutions = false;
-	private final String mazeFile = "maze2.txt";
+	private final String mazeFile = "maze1.txt";
 	
 	private final short[][] dirs = {{1,0}, {-1,0}, {0,1}, {0,-1}};
 	private final int WINDOW_SIZE = 820;
@@ -50,6 +50,11 @@ public class Main extends Application {
 		Scanner in = new Scanner(new File(mazeFile));
 		n = in.nextInt();
 		m = in.nextInt();
+		if(n == 0 || m == 0) {
+			System.out.println("The maze dimensions are invalid.");
+			in.close();
+			return;
+		}
 		w = (double) WINDOW_SIZE / m;
 		h = (double) WINDOW_SIZE / n;
 		
@@ -68,7 +73,9 @@ public class Main extends Application {
 		}
 		
 		while(in.hasNextInt()) {
-			grid[in.nextInt()][in.nextInt()] = true;
+			int r = in.nextInt(), c = in.nextInt();
+			if(!inBounds(r,c)) continue;
+			grid[r][c] = true;
 		}
 		
 		in.close();
@@ -227,7 +234,8 @@ public class Main extends Application {
 	}
 	
 	private Color getColor(int d, int pathLength) {
-		return Color.hsb(270 - 150 * d/pathLength, 1.0, 1.0);
+		if(pathLength == 0) return Color.hsb(270, 1, 1);
+		return Color.hsb(270 - 150 * d/pathLength, 1, 1);
 	}
 	
 	private boolean inBounds(int r, int c) {
