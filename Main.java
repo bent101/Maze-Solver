@@ -12,6 +12,9 @@ import java.math.*;
 
 public class Main extends Application {
 	// globals
+	private final boolean showingAllSolutions = false;
+	private final String mazeFile = "maze3.txt";
+	
 	private final short[][] dirs = {{1,0}, {-1,0}, {0,1}, {0,-1}};
 	private final int WINDOW_SIZE = 820;
 	
@@ -44,7 +47,7 @@ public class Main extends Application {
 		root.getChildren().add(border);
 		
 		// read in maze
-		Scanner in = new Scanner(new File("maze1.txt"));
+		Scanner in = new Scanner(new File(mazeFile));
 		n = in.nextInt();
 		m = in.nextInt();
 		w = (double) WINDOW_SIZE / m;
@@ -101,13 +104,19 @@ public class Main extends Application {
 			System.out.println(msg + " of length " +
 					pathLength + " going from (" +
 					startR + ", " + startC + ") to (" + endR + ", " + endC + ")!");
+			
 			// display solution
 			int timePerStep;
 			if(pathLength == 0) timePerStep = 3000;
 			else if(pathLength < 100) timePerStep = 3000 / pathLength;
 			else timePerStep = 1;
-			displaySolution(
+			
+			if(showingAllSolutions)
+				displayAllSolutions(
 					startR, startC, pathLength, pathLength, timePerStep, new boolean[n][m]);
+			else
+				displaySolution(
+					startR, startC, pathLength, pathLength, timePerStep);
 		});
 		
 		// display scene
@@ -168,6 +177,28 @@ public class Main extends Application {
 	
 	// displays solution recursively
 	private void displaySolution(
+			int r, int c, int d, int pathLength, int timePerStep) {
+		Rectangle rect = new Rectangle(c*w, r*h, w+0.5, h+0.5);
+		rect.setFill(getColor(d, pathLength));
+		root.getChildren().add(rect);
+		
+		for(short[] dir : dirs) {
+			int newr = r + dir[0];
+			int newc = c + dir[1];
+			if(inBounds(newr, newc) &&
+			   distFromEnd[newr][newc] == d-1) {
+				PauseTransition pt = new PauseTransition();
+				pt.setDuration(new Duration(timePerStep));
+				pt.setOnFinished(e -> {
+					displaySolution(newr, newc, d-1, pathLength, timePerStep);
+				});
+				pt.play();
+				return;
+			}
+		}
+	}
+	
+	private void displayAllSolutions(
 			int r, int c, int d, int pathLength, int timePerStep, boolean[][] seen) {
 		if(seen[r][c]) return;
 		seen[r][c] = true;
@@ -183,13 +214,9 @@ public class Main extends Application {
 				PauseTransition pt = new PauseTransition();
 				pt.setDuration(new Duration(timePerStep));
 				pt.setOnFinished(e -> {
-					displaySolution(newr, newc, d-1, pathLength, timePerStep, seen);
+					displayAllSolutions(newr, newc, d-1, pathLength, timePerStep, seen);
 				});
 				pt.play();
-				
-				// returning here displays only one solution
-				// continuing displays all possible solutions
-				// return;
 			}
 		}
 	}
