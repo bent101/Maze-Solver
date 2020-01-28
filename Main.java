@@ -13,7 +13,7 @@ import java.math.*;
 public class Main extends Application {
 	// globals
 	private final boolean showingAllSolutions = false;
-	private final String mazeFile = "maze3.txt";
+	private final String mazeFile = "maze2.txt";
 	
 	private final short[][] dirs = {{1,0}, {-1,0}, {0,1}, {0,-1}};
 	private final int WINDOW_SIZE = 820;
@@ -98,12 +98,17 @@ public class Main extends Application {
 				System.out.println("The maze is not passable.");
 				return;
 			}
+			String numPathsStr = "" + numPaths[endR][endC];
+			for(int i = numPathsStr.length()-3; i > 0; i -= 3) {
+				numPathsStr = numPathsStr.substring(0,i) + "," + numPathsStr.substring(i);
+			}
 			// print the number of paths from start to bottom-right
 			String msg = numPaths[endR][endC].equals(BigInteger.ONE) ?
-					"There is one path" : "There are " + numPaths[endR][endC] + " paths";
+					"There is one path" : "There are " + numPathsStr + " paths";
 			System.out.println(msg + " of length " +
 					pathLength + " going from (" +
-					startR + ", " + startC + ") to (" + endR + ", " + endC + ")!");
+					startR + ", " + startC + ") to (" + endR + ", " + endC +
+					") in " + mazeFile.substring(0, mazeFile.indexOf(".")) + "!");
 			
 			// display solution
 			int timePerStep;
