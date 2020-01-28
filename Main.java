@@ -106,7 +106,8 @@ public class Main extends Application {
 			if(pathLength == 0) timePerStep = 3000;
 			else if(pathLength < 100) timePerStep = 3000 / pathLength;
 			else timePerStep = 1;
-			displaySolution(startR, startC, pathLength, timePerStep, new boolean[n][m]);
+			displaySolution(
+					startR, startC, pathLength, pathLength, timePerStep, new boolean[n][m]);
 		});
 		
 		// display scene
@@ -166,11 +167,12 @@ public class Main extends Application {
 	}
 	
 	// displays solution recursively
-	private void displaySolution(int r, int c, int d, int timePerStep, boolean[][] seen) {
+	private void displaySolution(
+			int r, int c, int d, int pathLength, int timePerStep, boolean[][] seen) {
 		if(seen[r][c]) return;
 		seen[r][c] = true;
 		Rectangle rect = new Rectangle(c*w, r*h, w+0.5, h+0.5);
-		rect.setFill(Color.rgb(0, 100, 240));
+		rect.setFill(getColor(d, pathLength));
 		root.getChildren().add(rect);
 		
 		for(short[] dir : dirs) {
@@ -181,7 +183,7 @@ public class Main extends Application {
 				PauseTransition pt = new PauseTransition();
 				pt.setDuration(new Duration(timePerStep));
 				pt.setOnFinished(e -> {
-					displaySolution(newr, newc, d-1, timePerStep, seen);
+					displaySolution(newr, newc, d-1, pathLength, timePerStep, seen);
 				});
 				pt.play();
 				
@@ -190,6 +192,10 @@ public class Main extends Application {
 				// return;
 			}
 		}
+	}
+	
+	private Color getColor(int d, int pathLength) {
+		return Color.hsb(270 - 150 * d/pathLength, 1.0, 1.0);
 	}
 	
 	private boolean inBounds(int r, int c) {
