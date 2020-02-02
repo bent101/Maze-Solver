@@ -12,8 +12,8 @@ import java.math.*;
 
 public class Main extends Application {
 	// globals
-	private final boolean showingAllSolutions = false;
-	private final String mazeFile = "maze4.txt";
+	private final boolean showingAllSolutions = true;
+	private final String mazeFile = "maze5.txt";
 	
 	private final short[][] dirs = {{1,0}, {-1,0}, {0,1}, {0,-1}};
 	private final int WINDOW_SIZE = 820;
@@ -47,6 +47,7 @@ public class Main extends Application {
 		root.getChildren().add(border);
 		
 		// read in maze
+		// MazeGenerator.main(null);
 		Scanner in = new Scanner(new File(mazeFile));
 		n = in.nextInt();
 		m = in.nextInt();
@@ -232,7 +233,7 @@ public class Main extends Application {
 	
 	private Color getColor(int d, int pathLength) {
 		if(pathLength == 0) return Color.hsb(270, 1, 1);
-		return Color.hsb(270 - 150 * d/pathLength, 1, 1);
+		return Color.hsb(60 * d/pathLength, 1, 1);
 	}
 	
 	private boolean inBounds(int r, int c) {
