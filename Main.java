@@ -51,7 +51,7 @@ public class Main extends Application {
 		Scanner in = new Scanner(new File(mazeFile));
 		n = in.nextInt();
 		m = in.nextInt();
-		if(n == 0 || m == 0) {
+		if(n <= 0 || m <= 0) {
 			System.out.println("The dimensions for " + mazeFile + " are invalid.");
 			in.close();
 			return;
