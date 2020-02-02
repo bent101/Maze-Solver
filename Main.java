@@ -13,7 +13,7 @@ import java.math.*;
 public class Main extends Application {
 	// globals
 	private final boolean showingAllSolutions = true;
-	private final String mazeFile = "maze5.txt";
+	private final String mazeFile = "maze6.txt";
 	
 	private final short[][] dirs = {{1,0}, {-1,0}, {0,1}, {0,-1}};
 	private final int WINDOW_SIZE = 820;
@@ -232,7 +232,7 @@ public class Main extends Application {
 	}
 	
 	private Color getColor(int d, int pathLength) {
-		if(pathLength == 0) return Color.hsb(270, 1, 1);
+		if(pathLength == 0) return Color.hsb(30, 1, 1);
 		return Color.hsb(60 * d/pathLength, 1, 1);
 	}
 	
